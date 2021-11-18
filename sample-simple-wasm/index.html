@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sample-simple-wasm</title>
+</head>
+<body>
+   
+    <script type="text/javascript">
+        const wasmPath = './simple.wasm';
+
+        // wasm content of text format
+        // (module
+        //   (func $imports.imported_func (;0;) (import "imports" "imported_func") (param i32))
+        //   (func $exported_func (;1;) (export "exported_func")
+        //     i32.const 42
+        //     call $imports.imported_func
+        //   )
+        // )
+
+        const importObject = {
+            imports: {
+                imported_func: arg => {
+                    console.log(`raw value: ${arg}`);
+                    console.log(arg + 2);
+                }
+            }
+        };
+        fetch(wasmPath).then(response => {
+            return response.arrayBuffer();
+        }).then(bytes => {
+            return WebAssembly.instantiate(bytes, importObject);
+        }).then(results => {
+            results.instance.exports.exported_func();
+        })
+    </script>
+</body>
+</html>
