@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sample-memory</title>
+</head>
+<body>
+   <script>
+       // webassemblyページを1単位として64KB固定
+       const memory = new WebAssembly.Memory({
+           initial: 10, // 640KB
+           maximum: 100 // 6.4MB
+       });
+
+       console.log(memory.buffer) // arraybuffer: byte length 65536
+       new Uint32Array(memory.buffer)[0] = 256;
+       new Uint32Array(memory.buffer)[1] = 512;
+       console.log(new Uint32Array(memory.buffer)[0]); // 256
+       console.log(new Uint32Array(memory.buffer)[2]); // 0
+
+    memory.grow(1);
+   </script> 
+</body>
+</html>

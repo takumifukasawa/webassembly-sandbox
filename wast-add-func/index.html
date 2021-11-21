@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test-compile-wast</title>
+</head>
+<body>
+    <script>
+        // refs: https://developer.mozilla.org/ja/docs/WebAssembly/Understanding_the_text_format
+        const wasmPath = './add.wasm';
+        fetch(wasmPath)
+            .then(response => response.arrayBuffer())
+            .then(bytes => WebAssembly.instantiate(bytes))
+            .then(obj => {
+                const result = obj.instance.exports.add(1, 0.999);
+                console.log(result);
+            });
+    </script>
+</body>
+</html>

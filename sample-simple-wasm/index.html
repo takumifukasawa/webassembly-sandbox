@@ -28,11 +28,20 @@
                 }
             }
         };
+
+        WebAssembly.instantiateStreaming(fetch(wasmPath), importObject)
+        .then(results => {
+            console.log("instantiate streaming");
+            results.instance.exports.exported_func();
+        })
+
+        // fetchした場合はarraybufferに直す必要がある
         fetch(wasmPath).then(response => {
             return response.arrayBuffer();
         }).then(bytes => {
             return WebAssembly.instantiate(bytes, importObject);
         }).then(results => {
+            console.log("fetch");
             results.instance.exports.exported_func();
         })
     </script>
